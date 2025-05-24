@@ -1,7 +1,19 @@
 import { Elysia } from "elysia";
+import cors from "@elysiajs/cors";
+import { jwt } from "@elysiajs/jwt";
+import { cookie } from "@elysiajs/cookie";
+import { userRoutes } from "./routes/user.route";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const app = new Elysia()
+  .use(cookie())
+  .use(jwt({ name: "jwt", secret: process.env.JWT_SECRET || "secret" }))
+  .use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  )
+  .group("/api/v1", (app) => userRoutes(app));
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+app.listen(8000);
+console.log("🦊 Elysia running on http://localhost:8000");
