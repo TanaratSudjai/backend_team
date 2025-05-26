@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import cors from "@elysiajs/cors";
 import { jwt } from "@elysiajs/jwt";
 import { cookie } from "@elysiajs/cookie";
-import { userRoutes } from "./routes/user.route";
+import { routes } from "./routes";
 
 const app = new Elysia()
   .use(cookie())
@@ -13,7 +13,7 @@ const app = new Elysia()
       credentials: true,
     })
   )
-  .group("/api/v1", (app) => userRoutes(app));
+  .use(routes);
 
 app.listen(8000);
 console.log("🦊 Elysia running on http://localhost:8000");
